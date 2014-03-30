@@ -1,0 +1,73 @@
+
+/**
+ * @file
+ * styles.css
+ */
+
+/* Ship this */
+.sybil-carousel {
+  position: relative;
+}
+.sybil-carousel .current,
+.sybil-carousel .next {
+  position: absolute;
+  width: 100%;
+}
+.sybil-carousel .current.hidden,
+.sybil-carousel .next.hidden {
+  opacity: 0;
+}
+.sybil-carousel .pager {
+  position: absolute;
+  right: 25px;
+  top: 20px;
+  z-index: 3;
+}
+.sybil-carousel .pager li {
+  text-align: center;
+  width: 100%;
+  list-style: none;
+  padding: 7px;
+}
+.sybil-carousel .pager li a:before {
+  display: block;
+  content: "";
+  position: absolute;
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  border: 2px solid #FFFFFF;
+  border-radius: 20px;
+  height: 17px;
+  width: 17px;
+  opacity: 0.5;
+}
+.sybil-carousel .pager li a {
+  color: #FFFFFF;
+  font-size: 14px;
+  text-decoration: none;
+}
+.sybil-carousel .pager li a:before:hover {
+  opacity: 1;
+}
+.sybil-carousel .pager li a.active {
+  background: none repeat scroll 0 0 #FFFFFF;
+  opacity: 1;
+}
+.sybil-carousel .nav {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+.sybil-carousel .nav a {
+  position: absolute;
+  background: none repeat scroll 0 0 #000000;
+  height: 30px;
+  width: 30px;
+  margin-top: 20%;
+  z-index: 3;
+}
+.sybil-carousel .nav a.next-slide {
+  right: 0;
+}
+.sybil-carousel .nav a.previous-slide {
+  left: 0;
+}
