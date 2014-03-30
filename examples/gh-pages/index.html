@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Sybil</title>
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Londrina+Outline' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="css/fonts/foundation-icons.css"/>
+
+  <link rel="stylesheet" type="text/css" href="css/animate.css"/>
+	<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+  <link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src="../../jquery.sybil.min.js"></script> 
+
+  <script>
+    $(function() {
+      window_size = $(window).height();
+      $('#page-home').css('height', window_size);
+
+      $('#sybil').sybil({
+        currentSlide: '.oldie',
+        nextSlide: '.newbie',
+        scrollType: 'horizontal',
+        images: ['images/1.jpg', 'images/2.jpg', 'images/3.jpg']
+      });
+
+      $('#sybil2').sybil({
+        currentSlide: '.current',
+        nextSlide: '.next',
+        animationIn: 'fadeIn',
+        animationOut: 'fadeOut',
+        imageSize: 'auto auto',
+        scrollType: 'vertical',
+        imageRepeat: true,
+        fullscreen: false,
+        scrollPos: 0.5,
+        images: ['images/1.jpg', 'images/2.jpg', 'images/3.jpg']
+      });
+
+      $('a.menu-toggle').click(function() {
+        $(this).toggleClass('active');
+        $('.main').toggleClass('open');
+        $('.navigation').toggleClass('open');
+      });
+      
+     /**
+      * @author
+      * http://css-tricks.com/snippets/jquery/smooth-scrolling/
+      */
+      $('a[href*=#]:not([href=#])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+          var target = $(this.hash);
+          target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+          if (target.length) {
+            $('html,body').animate({
+              scrollTop: target.offset().top
+            }, 1350);
+
+            return false;
+          }
+        }
+      });
+    });
+  </script>
+
+</head>
+<body>
+  <nav class="navigation" role="navigation">
+    <div class="navbar-header">
+      <strong>Navigation</strong><a class="menu-toggle fi-power"></a>
+    </div>
+
+    <ul class="nav">
+      <li><a href="#page-home">Home</a></li>
+      <li><a href="#page-api">Sybil documentation</a>
+        <ul>
+          <li><a href="#page-api">Basic</a></li>
+          <li><a href="#page-api">Options</a></li>
+          <li><a href="#page-api">Callbacks</a></li>
+        </ul>
+      </li>
+      <li><a href="#page-support">Support<a>
+        <ul>
+          <li><a href="#page-support">Extensions</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="main">
+    <div id="page-home" class="page">
+      <div class="header-wrapper">
+        <div class="header">
+          <a class="menu-toggle fi-power"></a>
+          <div class="logo-wrapper">
+            <a class="logo">Sybil</a>
+          </div>
+          <div class="links-wrapper">
+            <a class="download link" href="#linkt">Download</a>
+            <a class="docs link" href="#page-api">Documentation</a>
+          </div>
+        </div>
+      </div>
+      <div id="sybil-wrapper" class="sybil-wrapper">
+        <div id="sybil" class="sybil-carousel">
+          <div class="newbie animated"></div>
+          <div class="oldie animated"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-wrapper about">
+      <div id="page-about" class="page">
+        <div class="about-wrapper">
+          <div class="small item">
+            <span class="icon fi-foundation"></span>
+            <div class="content">
+              <p>Sybil is 3kb minified & less than 1kb gzipped.</p>
+            </div>
+          </div>
+          <div class="compatible item">
+            <div class="icon fi-photo"></div>
+            <div class="content">
+              <p>Sybil is not a carousel replacement but a lightweight "feature wall" component.</p>
+            </div>
+          </div>
+          <div class="animations item">
+            <div class="icon fi-thumbnails"></div>
+            <div class="content">
+              <p>Sybil supports slide transitions with any CSS animation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-wrapper about">
+      <div id="page-about" class="page">
+        <div class="about-wrapper">
+          <div class="small item">
+            <span class="icon fi-layout"></span>
+            <div class="content">
+              <p>Sybil makes very few CSS assumptions.</p>
+            </div>
+          </div>
+          <div class="compatible item">
+            <div class="icon fi-wrench"></div>
+            <div class="content">
+               <p>Sybil supports IE 8 +, FireFox 3 +, Safari 2 + & requires jQuery 1.4 or higher.</p>
+            </div>
+          </div>
+          <div class="animations item">
+            <div class="icon fi-credit-card"></div>
+            <div class="content">
+              <p>Sybil is 100% open source & is licensed under MIT.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-wrapper api">
+      <div id="page-api" class="page">
+        <div class="page-title">
+          <h1 class="title">Sybil documentation</h1>
+        </div>
+        <div class="content">
+          <div class="section-basic section">
+            <h2>Basic</h2>
+            <div class="section-content">
+<pre>
+$('#sybil').sybil();
+
+</pre>
+      <pre>
+<textarea disabled="disabled">
+<div id="sybil">
+  <div class="next">
+  </div>
+  <div class="current">
+  </div>
+</div>
+</textarea>
+            </pre>
+            <p>Sybil requires two inner div's; both with classes. However these div's may be nested inside any number of other elements.</p>
+  <pre>
+
+  // Initialize Sybil on element.
+  $('#sybil').sybil({
+    currentSlide: '.one-div',
+    nextSlide: '.two-div'
+  });
+
+  </pre>
+            <p>Basic HTML structure expected by Sybil.</p>
+            <pre>
+  <textarea disabled="disabled">
+  <div id="sybil">
+    <div class="one-div">
+    </div>
+    <div class="two-div">
+    </div>
+  </div>
+  </textarea>
+            </pre>
+            <p>Slightly more complex HTML structure.</p>
+            <pre>
+  <textarea class="large" disabled="disabled">
+  <div id="sybil">
+    <div class="some-other-div">
+      <div class="some-div">
+        <div class="one-div">
+        </div>
+      </div>
+    </div>
+    <div class="some-other-other-div">
+      <div class="two-div">
+      </div>
+    </div>
+  </div>
+  </textarea>
+            </pre>
+            </div>
+          </div>
+          <div class="section-options section">
+            <h2>Options</h2>
+            <pre>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Option</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                    <th>Values</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Speed</td>
+                    <td>Int</td>
+                    <td>7500</td>
+                    <td>Speed of slide transition</td>
+                  </tr>
+                  <tr>
+                    <td>animationSpeed</td>
+                    <td>Int</td>
+                    <td>3000</td>
+                    <td>Speed of animation transition</td>
+                  </tr>
+                  <tr>
+                    <td>scrollPos</td>
+                    <td>Int</td>
+                    <td>1.6</td>
+                    <td>Speed of image scroll position</td>
+                  </tr>
+                  <tr>
+                    <td>currentSlide</td>
+                    <td>string</td>
+                    <td>.current</td>
+                    <td>Current slide selector</td>
+                  </tr>
+                  <tr>
+                    <td>nextSlide</td>
+                    <td>string</td>
+                    <td>.next</td>
+                    <td>Next slide selector</td>
+                  </tr>
+                  <tr>
+                    <td>animationIn</td>
+                    <td>string</td>
+                    <td>slideInLeft</td>
+                    <td>CSS animation for adding slides</td>
+                  </tr>
+                  <tr>
+                    <td>animationOut</td>
+                    <td>string</td>
+                    <td>slideOutRight</td>
+                    <td>CSS animation for removing slides</td>
+                  </tr>
+                  <tr>
+                    <td>imageSize</td>
+                    <td>string</td>
+                    <td>cover</td>
+                    <td>CSS property; background-size</td>
+                    <td>auto, <em>length</em>, <em>percentage</em>, 
+  cover, contain, initial, inherit</td>
+                  </tr>
+                  <tr>
+                    <td>scrollType</td>
+                    <td>string</td>
+                    <td>vertical</td>
+                    <td>Image scroll direction; for parallax effect</td>
+                    <td>vertical, horizontal</td>
+                  </tr>
+                  <tr>
+                    <td>navigation</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Provides carousel navigation if true</td>
+                  </tr>
+                  <tr>
+                    <td>fullscreen</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Carousel will set browser height on slides if true</td>
+                  </tr>
+                  <tr>
+                    <td>onScroll</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Provides parallax scrolling if true</td>
+                  </tr>
+                  <tr>
+                    <td>autoPlay</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Auto play carousel on load</td>
+                  </tr>
+                  <tr>
+                    <td>loop</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Loop carousel after first complete run</td>
+                  </tr>
+                  <tr>
+                    <td>onchange</td>
+                    <td>callback</td>
+                    <td></td>
+                    <td>Callback fires on slide change</td>
+                  </tr>
+                  <tr>
+                    <td>images</td>
+                    <td>array</td>
+                    <td></td>
+                    <td>Array of images with relative or absolute paths</td>
+                  </tr>
+                </tbody>
+              </table>
+            </pre>
+          </div>
+          <div class="section-callbacks section">
+            <h2>Callbacks</h2>
+            <pre>
+            <table>
+              <thead>
+                <tr>
+                  <th>Callback</th>
+                  <th>Event</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>onchange</td>
+                  <td>Slide change</td>
+                  <td>Fires when a slide is updated.</td>
+                </tr>
+              </tbody>
+            </table>
+            </pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-wrapper carousel">
+      <div id="sybil-wrapper" class="sybil-wrapper">
+        <div id="sybil2" class="sybil-carousel">
+          <div class="next animated"></div>
+          <div class="current animated"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-wrapper support">
+      <div id="page-support" class="page">
+        <div class="page-title">
+          <h1 class="title">Support</h1>
+        </div>
+        <div class="content">
+          <div class="section-extensions section">
+            <h2>Extensions</h2>
+            <p>Please open an issue if you have created an integration method for a CMS/ framework.</p>
+            <h2>Animations</h2>
+            <p>Sybil uses animations from the awesome <a href="http://daneden.github.io/animate.css" target="_blank">animate.css</a> project.</p>
+            <h2>Fonts</h2>
+            <p>This site uses the sweet <a href="http://zurb.com/playground/foundation-icon-fonts-3" target="_blank">Foundation 3</a> icon set.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-wrapper footer">
+      <div id="page-footer" class="page">
+        <p>Sybil was developed by <a href="http://legomenon.io" target="_blank">Swim</a> | All photography belongs to <a href="http://www.nationalgeographic.com" target="_blank">National Geographic</a></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
