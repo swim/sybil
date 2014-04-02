@@ -2,7 +2,9 @@
  * @file
  * jquery.sybil.js
  *
- * Sybil Carousel 0.4
+ * Sybil is not a carousel replacement but an image feature wall
+ * component. Sybil aims to provide a lightweight solution for 
+ * parallax image containers.
  *
  * @todo
  * - Attempt preloading of slide images.
@@ -15,17 +17,18 @@
   var defaults = {
     speed: 7500,
     animationSpeed: 3000,
-    scrollPos: 1.6,
+    scrollPos: 1.1,
     currentSlide: '.current',
     nextSlide: '.next',
-    animationIn: 'slideInLeft',
-    animationOut: 'slideOutRight',
+    animationIn: 'bounceInUp',
+    animationOut: 'bounceOutUp',
     imageSize: 'cover',
     scrollType: 'vertical',
     navigation: false,
     fullscreen: true,
     onScroll: true,
     autoPlay: true,
+    preLoad: true,
     loop: true,
     onchange: '',
     images: []
@@ -39,6 +42,8 @@
     this.$instance = $(instance);
     this.config = $.extend({}, defaults, options, this.$instance.data());
 
+    this.image = [];
+    this.loaded = false;
     this.images = this.config.images;
     this.count = this.config.images.length;
     this.currentSlide = 0;
@@ -46,7 +51,7 @@
     this.current = this.$instance.find(this.config.currentSlide);
     this.next = this.$instance.find(this.config.nextSlide);
 
-    if (this.count > 1) {
+    if (this.count) {
       this.setup();
     }
 
@@ -54,24 +59,10 @@
   };
 
   /**
-   * Handles setup of default values, settings & elements.
+   * Handles setup of Sybil.
    */
   sybil.prototype.setup = function() {
-    // Set defaults.
-    this.current.addClass(this.config.animationIn);
-    this.current.css('background-size', this.config.imageSize);
-    this.current.css('background-image', 'url(' + this.images[0] + ')');
-
-    this.next.addClass('hidden');
-    this.next.css('background-image', this.config.imageSize);
-    this.next.css('background-image', 'url(' + this.images[1] + ')');
-
-    // Convert animationSpeed to CSS valid property.
-    var animationSpeed = this.config.animationSpeed / 1000 + 's';
-
-    // Set default animation speed.
-    this.current.css('animation-duration', animationSpeed);
-    this.next.css('animation-duration', animationSpeed);
+    this.setDefaults();
 
     if (this.config.fullscreen) {
       var height = $(window).height();
@@ -89,25 +80,108 @@
   };
 
   /**
+   * Handles default settings.
+   */
+  sybil.prototype.setDefaults = function() {
+    if (this.config.preLoad) {
+      for (var i in this.images) {
+        this.loadImage(this.images[i], true);
+      }
+    }
+    else {
+      // Pre load first images only, 
+      // rest are loaded after slide transition.
+      this.loadImage(this.images[0], true);
+      this.loadImage(this.images[1], true);
+    }
+
+    // Set default settings.
+    this.current.addClass(this.config.animationIn);
+    this.current.css('background-size', this.config.imageSize);
+
+    this.next.addClass('hidden');
+    this.next.css('background-image', this.config.imageSize);
+
+    // Convert animationSpeed to CSS valid property.
+    var animationSpeed = this.config.animationSpeed / 1000 + 's';
+
+    // Set animation speed.
+    this.current.css('animation-duration', animationSpeed);
+    this.next.css('animation-duration', animationSpeed);
+  };
+  
+  /**
+   * Load image by path.
+   */
+  sybil.prototype.loadImage = function(src, preload) {
+    var sybil = this;
+
+    var loadImage = function(deferred) {
+      var image = new Image();
+      image.onload = loaded;
+
+      function loaded() {
+        unbindEvents();
+
+        sybil.loaded = true;
+        sybil.image.push(image);
+        deferred.resolve(image);
+
+        // Update scroll position.
+        sybil.watcher();
+
+        if (preload) {
+          // Default images.
+          sybil.current.css('background-image', 'url(' + sybil.image[0].src + ')');
+
+          if (typeof sybil.image[1] != 'undefined') {
+            sybil.next.css('background-image', 'url(' + sybil.image[1].src + ')');
+          }
+        }
+      }
+
+      // Image path.
+      image.src = src;
+
+      function unbindEvents() {
+        image.onload = null;
+      }
+    }
+
+    return $.Deferred(loadImage).promise();
+  };
+
+  /**
    * Handles on scroll events providing a
    * parallax effect.
    */
-  sybil.prototype.watcher = function () {
-    var scrollType = this.config.scrollType;
-    var scrollPos = this.config.scrollPos;
-    var current = this.current;
-    var next = this.next;
+  sybil.prototype.watcher = function() {
+    var sybil = this;
+    var currentSlide = sybil.currentSlide;
 
-    $(window).scroll(function(scroll) {
-      if (scrollType == 'vertical') {
-        var scroll = 'center ' + $(window).scrollTop() * scrollPos + 'px';
-      }
-      else if (scrollType == 'horizontal') {
-        var scroll = '-' + $(window).scrollTop() * scrollPos + 'px center';
+    $(window).scroll(function() {
+      var difference = $(window).scrollTop();
+
+      // Check if image height is greater than scroll height.
+      if (typeof currentSlide === 'undefined') {
+        currentSlide = 0;
       }
 
-      current.css('background-position', scroll);
-      next.css('background-position', scroll);
+      if (sybil.loaded) {
+        if ($(window).scrollTop() > sybil.image[currentSlide].height) {
+          var difference = $(window).scrollTop() - sybil.image[currentSlide].height;
+        }
+
+        if (sybil.config.scrollType == 'vertical') {
+          var scroll = 'center ' + difference * sybil.config.scrollPos + 'px';
+        }
+        else if (sybil.config.scrollType == 'horizontal') {
+          var scroll = '-' + difference * sybil.config.scrollPos + 'px center';
+        }
+
+        sybil.current.css('background-position', scroll);
+        sybil.next.css('background-position', scroll);
+      }
     });
 
     // Set default scroll position.
@@ -174,7 +248,7 @@
   sybil.prototype.nextAnimation = function() {
     this.next.addClass(this.config.animationIn);
     this.next.css('background-size', this.config.imageSize);
-    this.next.css('background-image', 'url(' + this.images[this.nextSlide] + ')');
+    this.next.css('background-image', 'url(' + this.image[this.nextSlide].src + ')');
     this.current.addClass(this.config.animationOut);
   };
 
@@ -185,7 +259,7 @@
     var sybil = this;
 
     setTimeout(function() {
-      sybil.current.css('background-image', 'url(' + sybil.images[sybil.nextSlide] + ')');
+      sybil.current.css('background-image', 'url(' + sybil.image[sybil.nextSlide].src + ')');
       sybil.current.removeClass(sybil.config.animationOut);
       // Provide as option? idk.
       sybil.next.removeClass(sybil.config.animationIn);
